@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>مختبر التشريح</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #080b10;
+      color: #f5f7fa;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #111827, #080b10);
+      padding: 22px 18px;
+      text-align: center;
+      border-bottom: 1px solid #202938;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #9ca8b8;
+      font-size: 14px;
+    }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: auto;
+      padding: 20px 0 50px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #151d2b, #0c111a);
+      border: 1px solid #263143;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .hero h2 {
+      font-size: 23px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #aeb8c6;
+      line-height: 1.8;
+    }
+
+    .search {
+      margin: 20px 0;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid #2b3749;
+      background: #111722;
+      color: white;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search input:focus {
+      border-color: #5b8cff;
+    }
+
+    .section-title {
+      font-size: 21px;
+      margin: 28px 0 15px;
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .category {
+      border: 1px solid #2c384b;
+      background: #111722;
+      color: #dbe4f0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .category:hover,
+    .category.active {
+      background: #1e3a6d;
+      border-color: #5b8cff;
+    }
+
+    .organs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 15px;
+    }
+
+    .organ {
+      background: #111722;
+      border: 1px solid #273346;
+      border-radius: 18px;
+      padding: 18px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .organ:hover {
+      transform: translateY(-4px);
+      border-color: #5b8cff;
+    }
+
+    .organ-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .organ h3 {
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .organ p {
+      color: #9da9b9;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .details {
+      display: none;
+      background: #111722;
+      border: 1px solid #344156;
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 25px;
+    }
+
+    .details.show {
+      display: block;
+    }
+
+    .details-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .details-icon {
+      font-size: 50px;
+    }
+
+    .details h2 {
+      font-size: 25px;
+    }
+
+    .details p {
+      color: #c1cad6;
+      line-height: 1.9;
+      margin: 10px 0;
+    }
+
+    .info-box {
+      background: #0b1018;
+      border: 1px solid #273346;
+      padding: 15px;
+      border-radius: 14px;
+      margin-top: 15px;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 7px;
+      color: #ffffff;
+    }
+
+    .quiz {
+      margin-top: 35px;
+      background: linear-gradient(135deg, #111827, #0c111a);
+      border: 1px solid #2b3749;
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .quiz h2 {
+      margin-bottom: 15px;
+    }
+
+    .question {
+      color: #c7d0dc;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .answer {
+      background: #161e2b;
+      color: white;
+      border: 1px solid #303c50;
+      padding: 13px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: right;
+    }
+
+.answer:hover {
+      border-color: #5b8cff;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: #718096;
+      padding: 30px 10px;
+      border-top: 1px solid #202938;
+      margin-top: 30px;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      color: #8d99a9;
+      padding: 30px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 23px;
+      }
+
+      .hero h2 {
+        font-size: 20px;
+      }
+
+      .organs {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .organ {
+        padding: 14px;
+      }
+
+      .organ-icon {
+        font-size: 34px;
+      }
+
+      .organ h3 {
+        font-size: 16px;
+      }
+
+      .organ p {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .organs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🧬 مختبر التشريح</h1>
+  <p>تعلّم جسم الإنسان بطريقة تفاعلية</p>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h2>مرحبًا بك في مختبر التشريح</h2>
+    <p>
+      استكشف أعضاء جسم الإنسان وتعرّف على وظائفها ومكانها
+      وأهم المعلومات المتعلقة بها.
+    </p>
+  </section>
+
+  <div class="search">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="🔎 ابحث عن عضو... مثل القلب أو الدماغ"
+      oninput="searchOrgans()"
+    >
+  </div>
+
+  <h2 class="section-title">أجهزة الجسم</h2>
+
+  <div class="categories">
+    <button class="category active" onclick="filterOrgans('all', this)">
+      الكل
+    </button>
+
+    <button class="category" onclick="filterOrgans('nervous', this)">
+      🧠 عصبي
+    </button>
+
+    <button class="category" onclick="filterOrgans('circulatory', this)">
+      ❤️ دوري
+    </button>
+
+    <button class="category" onclick="filterOrgans('respiratory', this)">
+      🫁 تنفسي
+    </button>
+
+    <button class="category" onclick="filterOrgans('digestive', this)">
+      🍽️ هضمي
+    </button>
+
+    <button class="category" onclick="filterOrgans('skeletal', this)">
+      🦴 عظمي
+    </button>
+  </div>
+
+  <h2 class="section-title">الأعضاء</h2>
+
+  <section class="organs" id="organs">
+
+    <article class="organ"
+      data-category="nervous"
+      data-name="الدماغ"
+      onclick="showOrgan('الدماغ','🧠','الجهاز العصبي','الدماغ هو مركز التحكم الرئيسي في الجهاز العصبي. يستقبل المعلومات ويعالجها ويساعد الجسم على الحركة والتفكير والذاكرة واتخاذ القرارات.','يقع داخل الجمجمة ويحظى بحماية العظام والسائل الدماغي الشوكي.')">
+
+      <div class="organ-icon">🧠</div>
+      <h3>الدماغ</h3>
+      <p>مركز التحكم والتفكير في الجسم.</p>
+    </article>
+
+    <article class="organ"
+      data-category="circulatory"
+      data-name="القلب"
+      onclick="showOrgan('القلب','❤️','الجهاز الدوري','القلب عضلة تعمل على ضخ الدم إلى أنحاء الجسم. يحمل الدم الأكسجين والمواد الغذائية إلى الخلايا ويساعد على نقل بعض الفضلات.','يوجد القلب داخل القفص الصدري بين الرئتين تقريبًا.')">
+
+      <div class="organ-icon">❤️</div>
+      <h3>القلب</h3>
+      <p>يضخ الدم إلى مختلف أجزاء الجسم.</p>
+    </article>
+
+    <article class="organ"
+      data-category="respiratory"
+      data-name="الرئتان"
+      onclick="showOrgan('الرئتان','🫁','الجهاز التنفسي','الرئتان عضوان أساسيان في عملية التنفس. يدخل الأكسجين إلى الدم أثناء تبادل الغازات ويخرج ثاني أكسيد الكربون من الجسم.','تقع الرئتان داخل القفص الصدري على جانبي القلب.')">
+
+      <div class="organ-icon">🫁</div>
+      <h3>الرئتان</h3>
+      <p>تساعدان الجسم على تبادل الغازات والتنفس.</p>
+    </article>
+
+    <article class="organ"
+      data-category="digestive"
+      data-name="المعدة"
+      onclick="showOrgan('المعدة','🫃','الجهاز الهضمي','المعدة عضو عضلي يساعد على تخزين الطعام وخلطه بالعصارات الهضمية، مما يساهم في عملية هضم الطعام.','تقع في الجزء العلوي من البطن.')">
+
+      <div class="organ-icon">🫃</div>
+      <h3>المعدة</h3>
+      <p>تساعد في هضم الطعام.</p>
+    </article>
+
+<article class="organ"
+      data-category="digestive"
+      data-name="الكبد"
+      onclick="showOrgan('الكبد','🧫','الجهاز الهضمي','الكبد عضو كبير يؤدي وظائف عديدة، منها معالجة بعض المواد الغذائية والمساهمة في عمليات الأيض وإنتاج الصفراء.','يقع بشكل رئيسي في الجزء العلوي الأيمن من البطن.')">
+
+      <div class="organ-icon">🧫</div>
+      <h3>الكبد</h3>
+      <p>عضو مهم له وظائف متعددة في الجسم.</p>
+    </article>
+
+    <article class="organ"
+      data-category="skeletal"
+      data-name="العظام"
+      onclick="showOrgan('الهيكل العظمي','🦴','الجهاز العظمي','يتكون الهيكل العظمي من العظام التي تساعد على دعم الجسم وحماية بعض الأعضاء وتوفير نقاط ارتباط للعضلات.','تختلف أنواع العظام وأشكالها ووظائفها في أجزاء الجسم المختلفة.')">
+
+      <div class="organ-icon">🦴</div>
+      <h3>العظام</h3>
+      <p>تدعم الجسم وتحمي العديد من أعضائه.</p>
+    </article>
+
+    <article class="organ"
+      data-category="nervous"
+      data-name="الحبل الشوكي"
+      onclick="showOrgan('الحبل الشوكي','🧠','الجهاز العصبي','الحبل الشوكي جزء مهم من الجهاز العصبي المركزي، وينقل الإشارات العصبية بين الدماغ وأجزاء مختلفة من الجسم.','يمتد داخل القناة الفقرية ويحظى بحماية العمود الفقري.')">
+
+      <div class="organ-icon">🧠</div>
+      <h3>الحبل الشوكي</h3>
+      <p>ينقل الإشارات العصبية بين الدماغ والجسم.</p>
+    </article>
+
+    <article class="organ"
+      data-category="respiratory"
+      data-name="القصبة الهوائية"
+      onclick="showOrgan('القصبة الهوائية','🫁','الجهاز التنفسي','القصبة الهوائية ممر هوائي ينقل الهواء من الحنجرة باتجاه الشعب الهوائية والرئتين.','تقع في مقدمة الرقبة وتمتد نحو الصدر.')">
+
+      <div class="organ-icon">🫁</div>
+      <h3>القصبة الهوائية</h3>
+      <p>تنقل الهواء باتجاه الرئتين.</p>
+    </article>
+
+  </section>
+
+  <div class="empty" id="empty">
+    لا توجد نتائج مطابقة للبحث.
+  </div>
+
+  <section class="details" id="details">
+
+    <div class="details-header">
+      <div class="details-icon" id="detailsIcon"></div>
+
+      <div>
+        <h2 id="detailsName"></h2>
+        <p id="detailsSystem"></p>
+      </div>
+    </div>
+
+    <p id="detailsDescription"></p>
+
+    <div class="info-box">
+      <strong>📍 الموقع</strong>
+      <span id="detailsLocation"></span>
+    </div>
+
+    <button
+      class="category"
+      style="margin-top:18px;"
+      onclick="closeDetails()">
+      إغلاق المعلومات
+    </button>
+
+  </section>
+
+  <section class="quiz">
+
+    <h2>🎯 اختبار سريع</h2>
+
+    <p class="question">
+      أي عضو يقوم بضخ الدم إلى أنحاء الجسم؟
+    </p>
+
+    <div class="answers">
+
+      <button class="answer" onclick="answerQuiz(false)">
+        🧠 الدماغ
+      </button>
+
+      <button class="answer" onclick="answerQuiz(true)">
+        ❤️ القلب
+      </button>
+
+      <button class="answer" onclick="answerQuiz(false)">
+        🫁 الرئتان
+      </button>
+
+      <button class="answer" onclick="answerQuiz(false)">
+        🦴 العظام
+      </button>
+
+    </div>
+
+    <div class="result" id="quizResult"></div>
+
+  </section>
+
+</main>
+
+<footer>
+  مختبر التشريح © 2026
+  <br>
+  منصة تعليمية لاستكشاف جسم الإنسان
+</footer>
+
+<script>
+
+  function showOrgan(name, icon, system, description, location) {
+
+    document.getElementById("detailsName").textContent = name;
+    document.getElementById("detailsIcon").textContent = icon;
+    document.getElementById("detailsSystem").textContent = system;
+    document.getElementById("detailsDescription").textContent = description;
+    document.getElementById("detailsLocation").textContent = location;
+
+    const details = document.getElementById("details");
+
+    details.classList.add("show");
+
+    details.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function closeDetails() {
+
+    document.getElementById("details").classList.remove("show");
+
+  }
+
+  function filterOrgans(category, button) {
+
+    const organs = document.querySelectorAll(".organ");
+
+    document.querySelectorAll(".category").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    let visible = 0;
+
+    organs.forEach(organ => {
+
+const organCategory = organ.dataset.category;
+
+      if (category === "all" || organCategory === category) {
+        organ.style.display = "";
+        visible++;
+      } else {
+        organ.style.display = "none";
+      }
+
+    });
+
+    document.getElementById("empty").style.display =
+      visible === 0 ? "block" : "none";
+
+  }
+
+  function searchOrgans() {
+
+    const query =
+      document.getElementById("searchInput").value
+      .trim()
+      .toLowerCase();
+
+    const organs = document.querySelectorAll(".organ");
+
+    let visible = 0;
+
+    organs.forEach(organ => {
+
+      const name =
+        organ.dataset.name.toLowerCase();
+
+      const text =
+        organ.textContent.toLowerCase();
+
+      if (name.includes(query) || text.includes(query)) {
+
+        organ.style.display = "";
+        visible++;
+
+      } else {
+
+        organ.style.display = "none";
+
+      }
+
+    });
+
+    document.getElementById("empty").style.display =
+      visible === 0 ? "block" : "none";
+
+  }
+
+  function answerQuiz(correct) {
+
+    const result =
+      document.getElementById("quizResult");
+
+    if (correct) {
+
+      result.textContent = "✅ إجابة صحيحة! القلب يضخ الدم إلى أنحاء الجسم.";
+
+    } else {
+
+      result.textContent = "❌ إجابة غير صحيحة. حاول مرة أخرى.";
+
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
